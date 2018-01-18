@@ -1,0 +1,9 @@
+$TTL 3600 
+@ SOA ns.{{item}} root.{{item}} (1 15m 5m 30d 1h) 
+		IN	NS	{{name_server}}
+
+{% for server1 in servers %}
+
+{{server1.hostname}}	IN	A	{{server1.ip}}
+
+{% endfor %}

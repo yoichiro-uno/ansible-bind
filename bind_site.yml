@@ -1,0 +1,6 @@
+- name: Create DNS Server
+  hosts: all 
+  become: yes
+  roles:
+    - bind
+  

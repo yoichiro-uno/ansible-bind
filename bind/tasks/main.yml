@@ -1,0 +1,37 @@
+- name: install bind
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+    - bind
+    - bind-utils
+
+
+- name: Create named.conf
+  template:
+    src: named.conf.j2
+    dest: /etc/named.conf
+    owner: root
+    group: named
+    mode: 0640
+  notify:
+    - restart bind
+
+- name: create zone file
+  template: 
+    src: zone_template.j2
+    dest: "/var/named/{{item}}zone"
+    owner: root
+    group: named
+    mode: 0640
+  with_items: "{{domain_name}}"
+  notify:
+    - restart bind
+
+- name: Disable IPv6 Support
+  lineinfile:
+    dest: /etc/sysconfig/named
+    line: 'OPTIONS="-4"'
+    regexp: "~OPTIONS"
+  notify:
+    - restart bind
